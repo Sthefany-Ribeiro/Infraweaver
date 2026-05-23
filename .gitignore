@@ -1,0 +1,23 @@
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+.terraform.lock.hcl
+
+# Ansible
+*.retry
+ansible/roles/*/files/secrets
+
+# Node
+node_modules/
+npm-debug.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+*.pem
+*.key
+.env
