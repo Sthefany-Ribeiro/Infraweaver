@@ -1,0 +1,60 @@
+---
+- name: Install required packages
+  apt:
+    name:
+      - curl
+      - unzip
+      - git
+    state: present
+    update_cache: yes
+  become: yes
+  tags: bootstrap
+
+- name: Check if kubectl is installed
+  command: kubectl version --client
+  register: kubectl_check
+  ignore_errors: yes
+  changed_when: false
+  tags: bootstrap
+
+- name: Install kubectl
+  shell: |
+    curl -LO "https://dl.k8s.io/release/{{ kubectl_version }}/bin/linux/amd64/kubectl"
+    chmod +x kubectl
+    mv kubectl /usr/local/bin/kubectl
+  become: yes
+  when: kubectl_check.rc != 0
+  tags: bootstrap
+
+- name: Check if helm is installed
+  command: helm version
+  register: helm_check
+  ignore_errors: yes
+  changed_when: false
+  tags: bootstrap
+
+- name: Install helm
+  shell: |
+    curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+  become: yes
+  when: helm_check.rc != 0
+  tags: bootstrap
+
+- name: Configure kubeconfig for EKS
+  shell: |
+    aws eks update-kubeconfig \
+      --name {{ cluster_name }} \
+      --region {{ aws_region }}
+  changed_when: false
+  tags: bootstrap
+
+- name: Verify cluster connection
+  command: kubectl get nodes
+  register: nodes_output
+  changed_when: false
+  tags: bootstrap
+
+- name: Show cluster nodes
+  debug:
+    msg: "{{ nodes_output.stdout_lines }}"
+  tags: bootstrap

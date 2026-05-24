@@ -1,0 +1,38 @@
+---
+- name: Create namespace
+  shell: |
+    kubectl get namespace {{ app_namespace }} || \
+    kubectl create namespace {{ app_namespace }}
+  changed_when: false
+
+- name: Add ECR credentials to kubernetes
+  shell: |
+    aws ecr get-login-password --region {{ aws_region }} | \
+    kubectl create secret docker-registry ecr-secret \
+      --docker-server={{ ecr_registry }} \
+      --docker-username=AWS \
+      --docker-password=$(aws ecr get-login-password --region {{ aws_region }}) \
+      --namespace={{ app_namespace }} \
+      --dry-run=client -o yaml | kubectl apply -f -
+  changed_when: false
+
+- name: Deploy application with helm
+  shell: |
+    helm upgrade --install {{ app_name }} ./helm/infraweaver \
+      --namespace {{ app_namespace }} \
+      --set image.repository={{ ecr_registry }}/{{ app_name }} \
+      --set image.tag={{ image_tag }} \
+      --set environment={{ environment }} \
+      --wait --timeout 5m
+  args:
+    chdir: "{{ playbook_dir }}/.."
+  changed_when: false
+
+- name: Verify deployment
+  shell: kubectl get pods -n {{ app_namespace }}
+  register: pods_output
+  changed_when: false
+
+- name: Show pods status
+  debug:
+    msg: "{{ pods_output.stdout_lines }}"

@@ -1,0 +1,23 @@
+---
+- name: Bootstrap environment
+  hosts: local
+  gather_facts: yes
+  vars:
+    cluster_name: "infraweaver-dev"
+    aws_region: "us-west-2"
+    env: "dev"
+  roles:
+    - bootstrap
+
+- name: Deploy application
+  hosts: local
+  gather_facts: no
+  vars:
+    app_name: "infraweaver"
+    app_namespace: "infraweaver"
+    ecr_registry: "020901022128.dkr.ecr.us-west-2.amazonaws.com"
+    image_tag: "latest"
+    aws_region: "us-west-2"
+    env: "dev"
+  roles:
+    - app-deploy
