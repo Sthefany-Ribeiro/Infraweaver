@@ -3,109 +3,619 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>InfraWeaver</title>
+<title>InfraWeaver — Self-Service Infrastructure Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#080c10;--bg2:#0d1117;--bg3:#111820;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);--text:#e8edf2;--muted:#6b7c8f;--accent:#00d4aa;--accent2:#0099ff;--accent3:#ff6b35;--mono:'Space Mono',monospace;--sans:'DM Sans',sans-serif}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.6;overflow-x:hidden}
-body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,170,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,170,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 2.5rem;background:rgba(8,12,16,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
-.nav-logo{font-family:var(--mono);font-size:1rem;color:var(--accent);letter-spacing:0.05em}
-.nav-logo span{color:var(--muted)}
-nav ul{display:flex;gap:2rem;list-style:none}
-nav a{color:var(--muted);text-decoration:none;font-size:0.85rem;font-family:var(--mono);letter-spacing:0.04em;transition:color 0.2s}
-nav a:hover{color:var(--accent)}
-.nav-cta{background:transparent;border:1px solid var(--accent);color:var(--accent)!important;padding:0.4rem 1rem;border-radius:4px;transition:background 0.2s!important}
-.nav-cta:hover{background:rgba(0,212,170,0.1)!important}
-.hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6rem 2rem 4rem;overflow:hidden}
-.hero-glow{position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(0,212,170,0.08) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
-.badge{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(0,212,170,0.08);border:1px solid rgba(0,212,170,0.25);color:var(--accent);font-family:var(--mono);font-size:0.75rem;letter-spacing:0.08em;padding:0.35rem 0.9rem;border-radius:100px;margin-bottom:2rem;animation:fadeDown 0.6s ease both}
-.badge::before{content:'';width:6px;height:6px;background:var(--accent);border-radius:50%;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.8)}}
-h1{font-family:var(--mono);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:700;line-height:1.1;letter-spacing:-0.02em;margin-bottom:1.5rem;animation:fadeDown 0.6s 0.1s ease both}
-h1 .accent{color:var(--accent)}
-h1 .accent2{color:var(--accent2)}
-.hero-sub{font-size:1.1rem;color:var(--muted);max-width:540px;margin:0 auto 2.5rem;font-weight:300;animation:fadeDown 0.6s 0.2s ease both}
-.hero-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;animation:fadeDown 0.6s 0.3s ease both}
-.btn-primary{background:var(--accent);color:#080c10;font-family:var(--mono);font-size:0.85rem;font-weight:700;padding:0.75rem 1.75rem;border-radius:6px;text-decoration:none;letter-spacing:0.04em;transition:opacity 0.2s,transform 0.2s}
-.btn-primary:hover{opacity:0.85;transform:translateY(-1px)}
-.btn-secondary{background:transparent;color:var(--text);font-family:var(--mono);font-size:0.85rem;padding:0.75rem 1.75rem;border-radius:6px;text-decoration:none;border:1px solid var(--border2);letter-spacing:0.04em;transition:border-color 0.2s,transform 0.2s}
-.btn-secondary:hover{border-color:var(--accent);transform:translateY(-1px)}
-.terminal-wrap{position:relative;z-index:1;margin:0 auto;max-width:680px;padding:0 2rem 5rem;animation:fadeUp 0.8s 0.4s ease both}
-.terminal{background:var(--bg2);border:1px solid var(--border2);border-radius:10px;overflow:hidden;font-family:var(--mono);font-size:0.8rem}
-.terminal-bar{display:flex;align-items:center;gap:0.5rem;padding:0.7rem 1rem;background:var(--bg3);border-bottom:1px solid var(--border)}
-.dot{width:10px;height:10px;border-radius:50%}
-.dot-r{background:#ff5f57}.dot-y{background:#ffbd2e}.dot-g{background:#28ca41}
-.terminal-title{flex:1;text-align:center;color:var(--muted);font-size:0.72rem}
-.terminal-body{padding:1.25rem 1.5rem;line-height:2}
-.t-prompt{color:var(--accent)}.t-cmd{color:var(--text)}.t-comment{color:var(--muted)}.t-ok{color:#28ca41}.t-info{color:var(--accent2)}.t-warn{color:var(--accent3)}
-section{position:relative;z-index:1;padding:5rem 2rem;max-width:1100px;margin:0 auto}
-.section-label{font-family:var(--mono);font-size:0.72rem;letter-spacing:0.12em;color:var(--accent);text-transform:uppercase;margin-bottom:0.75rem}
-.section-title{font-family:var(--mono);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;margin-bottom:1rem;line-height:1.2}
-.section-desc{color:var(--muted);max-width:560px;margin-bottom:3rem;font-weight:300}
-.stack-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:10px;overflow:hidden}
-.stack-item{background:var(--bg2);padding:1.5rem;transition:background 0.2s}
-.stack-item:hover{background:var(--bg3)}
-.stack-layer{font-family:var(--mono);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem}
-.stack-name{font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.25rem}
-.stack-detail{font-size:0.78rem;color:var(--muted);font-family:var(--mono)}
-.stack-dot{width:8px;height:8px;border-radius:50%;margin-bottom:0.75rem}
-.phases{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:10px;overflow:hidden}
-.phase{background:var(--bg2);padding:1.5rem 2rem;display:flex;align-items:flex-start;gap:1.5rem;transition:background 0.2s}
-.phase:hover{background:var(--bg3)}
-.phase-num{font-family:var(--mono);font-size:0.75rem;color:var(--accent);background:rgba(0,212,170,0.08);border:1px solid rgba(0,212,170,0.2);width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:6px;flex-shrink:0;margin-top:2px}
-.phase-title{font-weight:600;font-size:0.95rem;margin-bottom:0.25rem}
-.phase-desc{color:var(--muted);font-size:0.85rem}
-.phase-tags{display:flex;gap:0.4rem;flex-wrap:wrap;margin-top:0.6rem}
-.tag{font-family:var(--mono);font-size:0.68rem;padding:0.15rem 0.55rem;border-radius:3px;border:1px solid var(--border2);color:var(--muted);letter-spacing:0.04em}
-.metrics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin-bottom:3rem}
-.metric-card{background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:1.5rem}
-.metric-val{font-family:var(--mono);font-size:2rem;font-weight:700;color:var(--accent);line-height:1;margin-bottom:0.4rem}
-.metric-label{font-size:0.82rem;color:var(--muted)}
-.cost-table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:0.82rem}
-.cost-table th{text-align:left;padding:0.75rem 1rem;color:var(--muted);font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid var(--border2)}
-.cost-table td{padding:0.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text)}
-.cost-table tr:last-child td{border-bottom:none;color:var(--accent);font-weight:700}
-.cost-wrap{background:var(--bg2);border:1px solid var(--border2);border-radius:10px;overflow:hidden}
-footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
-.footer-logo{font-family:var(--mono);font-size:0.9rem;color:var(--accent)}
-.footer-links{display:flex;gap:1.5rem}
-.footer-links a{color:var(--muted);text-decoration:none;font-size:0.82rem;font-family:var(--mono);transition:color 0.2s}
-.footer-links a:hover{color:var(--accent)}
-footer p{color:var(--muted);font-size:0.8rem;font-family:var(--mono)}
-.divider{border:none;border-top:1px solid var(--border);margin:0}
-@keyframes fadeDown{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-.reveal{opacity:0;transform:translateY(24px);transition:opacity 0.6s ease,transform 0.6s ease}
-.reveal.visible{opacity:1;transform:translateY(0)}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #080c10;
+    --bg2: #0d1117;
+    --bg3: #111820;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.13);
+    --text: #e8edf2;
+    --muted: #6b7c8f;
+    --accent: #00d4aa;
+    --accent2: #0099ff;
+    --accent3: #ff6b35;
+    --mono: 'Space Mono', monospace;
+    --sans: 'DM Sans', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* GRID BG */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,170,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,170,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2.5rem;
+    background: rgba(8,12,16,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 1rem;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+  }
+
+  .nav-logo span { color: var(--muted); }
+
+  nav ul {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  nav a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-family: var(--mono);
+    letter-spacing: 0.04em;
+    transition: color 0.2s;
+  }
+
+  nav a:hover { color: var(--accent); }
+
+  .nav-cta {
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent) !important;
+    padding: 0.4rem 1rem;
+    border-radius: 4px;
+    transition: background 0.2s !important;
+  }
+
+  .nav-cta:hover { background: rgba(0,212,170,0.1) !important; }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 6rem 2rem 4rem;
+    overflow: hidden;
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,212,170,0.08) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(0,212,170,0.08);
+    border: 1px solid rgba(0,212,170,0.25);
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    padding: 0.35rem 0.9rem;
+    border-radius: 100px;
+    margin-bottom: 2rem;
+    animation: fadeDown 0.6s ease both;
+  }
+
+  .badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  h1 {
+    font-family: var(--mono);
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    animation: fadeDown 0.6s 0.1s ease both;
+  }
+
+  h1 .accent { color: var(--accent); }
+  h1 .accent2 { color: var(--accent2); }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 540px;
+    margin: 0 auto 2.5rem;
+    font-weight: 300;
+    animation: fadeDown 0.6s 0.2s ease both;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    animation: fadeDown 0.6s 0.3s ease both;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #080c10;
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 0.75rem 1.75rem;
+    border-radius: 6px;
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    padding: 0.75rem 1.75rem;
+    border-radius: 6px;
+    text-decoration: none;
+    border: 1px solid var(--border2);
+    letter-spacing: 0.04em;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .btn-secondary:hover { border-color: var(--accent); transform: translateY(-1px); }
+
+  /* TERMINAL */
+  .terminal-wrap {
+    position: relative;
+    z-index: 1;
+    margin: 0 auto;
+    max-width: 680px;
+    padding: 0 2rem 5rem;
+    animation: fadeUp 0.8s 0.4s ease both;
+  }
+
+  .terminal {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    overflow: hidden;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+  }
+
+  .terminal-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1rem;
+    background: var(--bg3);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-r { background: #ff5f57; }
+  .dot-y { background: #ffbd2e; }
+  .dot-g { background: #28ca41; }
+
+  .terminal-title {
+    flex: 1;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.72rem;
+  }
+
+  .terminal-body {
+    padding: 1.25rem 1.5rem;
+    line-height: 2;
+  }
+
+  .t-prompt { color: var(--accent); }
+  .t-cmd { color: var(--text); }
+  .t-comment { color: var(--muted); }
+  .t-ok { color: #28ca41; }
+  .t-info { color: var(--accent2); }
+  .t-warn { color: var(--accent3); }
+
+  /* SECTION */
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 5rem 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  .section-title {
+    font-family: var(--mono);
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 700;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .section-desc {
+    color: var(--muted);
+    max-width: 560px;
+    margin-bottom: 3rem;
+    font-weight: 300;
+  }
+
+  /* STACK GRID */
+  .stack-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .stack-item {
+    background: var(--bg2);
+    padding: 1.5rem;
+    transition: background 0.2s;
+  }
+
+  .stack-item:hover { background: var(--bg3); }
+
+  .stack-layer {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.4rem;
+  }
+
+  .stack-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.25rem;
+  }
+
+  .stack-detail {
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-family: var(--mono);
+  }
+
+  .stack-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    margin-bottom: 0.75rem;
+  }
+
+  /* ARCH */
+  .arch-diagram {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 2.5rem;
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    line-height: 2.2;
+    overflow-x: auto;
+  }
+
+  .arch-line { display: flex; align-items: center; gap: 0.5rem; }
+  .arch-arrow { color: var(--muted); }
+  .arch-node {
+    background: rgba(0,212,170,0.08);
+    border: 1px solid rgba(0,212,170,0.2);
+    color: var(--accent);
+    padding: 0.2rem 0.7rem;
+    border-radius: 4px;
+    font-size: 0.78rem;
+  }
+
+  .arch-node.blue {
+    background: rgba(0,153,255,0.08);
+    border-color: rgba(0,153,255,0.2);
+    color: var(--accent2);
+  }
+
+  .arch-node.orange {
+    background: rgba(255,107,53,0.08);
+    border-color: rgba(255,107,53,0.2);
+    color: var(--accent3);
+  }
+
+  .arch-label { color: var(--muted); font-size: 0.72rem; }
+
+  /* PHASES */
+  .phases {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .phase {
+    background: var(--bg2);
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    transition: background 0.2s;
+    cursor: default;
+  }
+
+  .phase:hover { background: var(--bg3); }
+
+  .phase-num {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--accent);
+    background: rgba(0,212,170,0.08);
+    border: 1px solid rgba(0,212,170,0.2);
+    width: 36px; height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .phase-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .phase-desc { color: var(--muted); font-size: 0.85rem; }
+
+  .phase-tags {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    margin-top: 0.6rem;
+  }
+
+  .tag {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    padding: 0.15rem 0.55rem;
+    border-radius: 3px;
+    border: 1px solid var(--border2);
+    color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+
+  /* METRICS */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  .metric-card {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 1.5rem;
+  }
+
+  .metric-val {
+    font-family: var(--mono);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 0.4rem;
+  }
+
+  .metric-label {
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+
+  /* COST TABLE */
+  .cost-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--mono);
+    font-size: 0.82rem;
+  }
+
+  .cost-table th {
+    text-align: left;
+    padding: 0.75rem 1rem;
+    color: var(--muted);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border2);
+  }
+
+  .cost-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  .cost-table tr:last-child td {
+    border-bottom: none;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .cost-wrap {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  /* FOOTER */
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    padding: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: gap;
+    gap: 1rem;
+  }
+
+  .footer-logo {
+    font-family: var(--mono);
+    font-size: 0.9rem;
+    color: var(--accent);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .footer-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-family: var(--mono);
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--accent); }
+
+  footer p {
+    color: var(--muted);
+    font-size: 0.8rem;
+    font-family: var(--mono);
+  }
+
+  /* DIVIDER */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
 </style>
 </head>
 <body>
+
 <nav>
   <div class="nav-logo">infra<span>//</span>weaver</div>
   <ul>
     <li><a href="#stack">Stack</a></li>
+    <li><a href="#arquitetura">Arquitetura</a></li>
     <li><a href="#fases">Fases</a></li>
     <li><a href="#observabilidade">Obs.</a></li>
     <li><a href="https://github.com/Sthefany-Ribeiro/Infraweaver" target="_blank" class="nav-cta">GitHub →</a></li>
   </ul>
 </nav>
+
+<!-- HERO -->
 <div class="hero">
   <div class="hero-glow"></div>
   <div class="badge">PROJETO DEVOPS · AWS · KUBERNETES</div>
-  <h1>Self-Service<br><span class="accent">Infrastructure</span><br><span class="accent2">Platform</span></h1>
-  <p class="hero-sub">Provisiona ambientes completos na AWS — VPC, EKS, RDS, CI/CD e Observabilidade — com infraestrutura como código de ponta a ponta.</p>
+  <h1>
+    Self-Service<br>
+    <span class="accent">Infrastructure</span><br>
+    <span class="accent2">Platform</span>
+  </h1>
+  <p class="hero-sub">
+    Provisiona ambientes completos na AWS — VPC, EKS, RDS, CI/CD e Observabilidade — com infraestrutura como código de ponta a ponta.
+  </p>
   <div class="hero-actions">
     <a href="https://github.com/Sthefany-Ribeiro/Infraweaver" target="_blank" class="btn-primary">Ver no GitHub</a>
-    <a href="#fases" class="btn-secondary">Ver fases</a>
+    <a href="#arquitetura" class="btn-secondary">Ver arquitetura</a>
   </div>
 </div>
+
 <div class="terminal-wrap">
   <div class="terminal">
     <div class="terminal-bar">
-      <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+      <span class="dot dot-r"></span>
+      <span class="dot dot-y"></span>
+      <span class="dot dot-g"></span>
       <span class="terminal-title">infraweaver — bash</span>
     </div>
     <div class="terminal-body">
@@ -125,7 +635,10 @@ footer p{color:var(--muted);font-size:0.8rem;font-family:var(--mono)}
     </div>
   </div>
 </div>
+
 <hr class="divider">
+
+<!-- STACK -->
 <section id="stack">
   <div class="reveal">
     <div class="section-label">// stack</div>
@@ -133,18 +646,130 @@ footer p{color:var(--muted);font-size:0.8rem;font-family:var(--mono)}
     <p class="section-desc">Cada ferramenta com uma responsabilidade clara — sem sobreposição, sem complexidade desnecessária.</p>
   </div>
   <div class="stack-grid reveal">
-    <div class="stack-item"><div class="stack-dot" style="background:#f0a500"></div><div class="stack-layer">App</div><div class="stack-name">Node.js + Express</div><div class="stack-detail">REST API · Jest tests</div></div>
-    <div class="stack-item"><div class="stack-dot" style="background:#2496ed"></div><div class="stack-layer">Container</div><div class="stack-name">Docker</div><div class="stack-detail">Alpine · npm ci</div></div>
-    <div class="stack-item"><div class="stack-dot" style="background:#326ce5"></div><div class="stack-layer">Orquestração</div><div class="stack-name">Kubernetes (EKS)</div><div class="stack-detail">v1.31 · 2x t3.medium</div></div>
-    <div class="stack-item"><div class="stack-dot" style="background:#7b42bc"></div><div class="stack-layer">IaC</div><div class="stack-name">Terraform</div><div class="stack-detail">Módulos · S3 backend</div></div>
-    <div class="stack-item"><div class="stack-dot" style="background:#ee0000"></div><div class="stack-layer">Config Mgmt</div><div class="stack-name">Ansible</div><div class="stack-detail">Roles · Playbooks</div></div>
-    <div class="stack-item"><div class="stack-dot" style="background:#0f1689"></div><div class="stack-layer">Package K8s</div><div class="stack-name">Helm</div><div class="stack-detail">Charts · values por env</div></div>
-    <div class="stack-item"><div class="stack-dot" style="background:#24292e"></div><div class="stack-layer">CI/CD</div><div class="stack-name">GitHub Actions</div><div class="stack-detail">test → build → deploy</div></div>
-    <div class="stack-item"><div class="stack-dot" style="background:#ff9900"></div><div class="stack-layer">Cloud</div><div class="stack-name">AWS</div><div class="stack-detail">ECR · EKS · RDS · VPC</div></div>
-    <div class="stack-item"><div class="stack-dot" style="background:#e6522c"></div><div class="stack-layer">Observabilidade</div><div class="stack-name">Prometheus + Grafana</div><div class="stack-detail">Métricas · Dashboards</div></div>
+    <div class="stack-item">
+      <div class="stack-dot" style="background:#f0a500"></div>
+      <div class="stack-layer">App</div>
+      <div class="stack-name">Node.js + Express</div>
+      <div class="stack-detail">REST API · Jest tests</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-dot" style="background:#2496ed"></div>
+      <div class="stack-layer">Container</div>
+      <div class="stack-name">Docker</div>
+      <div class="stack-detail">Alpine · multi-stage</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-dot" style="background:#326ce5"></div>
+      <div class="stack-layer">Orquestração</div>
+      <div class="stack-name">Kubernetes (EKS)</div>
+      <div class="stack-detail">v1.31 · 2x t3.medium</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-dot" style="background:#7b42bc"></div>
+      <div class="stack-layer">IaC</div>
+      <div class="stack-name">Terraform</div>
+      <div class="stack-detail">Módulos · S3 backend</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-dot" style="background:#ee0000"></div>
+      <div class="stack-layer">Config Mgmt</div>
+      <div class="stack-name">Ansible</div>
+      <div class="stack-detail">Roles · Playbooks</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-dot" style="background:#0f1689"></div>
+      <div class="stack-layer">Package K8s</div>
+      <div class="stack-name">Helm</div>
+      <div class="stack-detail">Charts · values por env</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-dot" style="background:#24292e"></div>
+      <div class="stack-layer">CI/CD</div>
+      <div class="stack-name">GitHub Actions</div>
+      <div class="stack-detail">test → build → deploy</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-dot" style="background:#ff9900"></div>
+      <div class="stack-layer">Cloud</div>
+      <div class="stack-name">AWS</div>
+      <div class="stack-detail">ECR · EKS · RDS · VPC</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-dot" style="background:#e6522c"></div>
+      <div class="stack-layer">Observabilidade</div>
+      <div class="stack-name">Prometheus + Grafana</div>
+      <div class="stack-detail">Métricas · Dashboards</div>
+    </div>
   </div>
 </section>
+
 <hr class="divider">
+
+<!-- ARQUITETURA -->
+<section id="arquitetura">
+  <div class="reveal">
+    <div class="section-label">// arquitetura</div>
+    <h2 class="section-title">Fluxo completo</h2>
+    <p class="section-desc">Do push no GitHub até os pods rodando no EKS com banco de dados gerenciado e observabilidade em tempo real.</p>
+  </div>
+  <div class="arch-diagram reveal">
+    <div class="arch-line">
+      <span class="arch-node blue">GitHub Push</span>
+      <span class="arch-arrow">──►</span>
+      <span class="arch-node">GitHub Actions CI</span>
+      <span class="arch-arrow">──►</span>
+      <span class="arch-label">test → build → push</span>
+      <span class="arch-arrow">──►</span>
+      <span class="arch-node orange">Amazon ECR</span>
+    </div>
+    <div style="margin-left:2rem; color: var(--muted);">│</div>
+    <div class="arch-line">
+      <span style="width:2rem"></span>
+      <span class="arch-arrow">▼</span>
+    </div>
+    <div class="arch-line">
+      <span class="arch-node">GitHub Actions Deploy</span>
+      <span class="arch-arrow">──►</span>
+      <span class="arch-label">helm upgrade</span>
+      <span class="arch-arrow">──►</span>
+      <span class="arch-node blue">EKS Cluster</span>
+      <span class="arch-arrow">──►</span>
+      <span class="arch-node">2x Pods</span>
+    </div>
+    <div style="margin-left:28rem; color: var(--muted);">│</div>
+    <div class="arch-line" style="margin-left:28rem;">
+      <span class="arch-arrow">▼</span>
+    </div>
+    <div class="arch-line" style="margin-left:22rem;">
+      <span class="arch-node orange">RDS PostgreSQL</span>
+      <span class="arch-arrow" style="margin-left:1rem">◄── private subnet</span>
+    </div>
+    <br>
+    <div class="arch-line">
+      <span class="arch-label">Internet</span>
+      <span class="arch-arrow">──►</span>
+      <span class="arch-node blue">ALB</span>
+      <span class="arch-arrow">──►</span>
+      <span class="arch-node">Ingress</span>
+      <span class="arch-arrow">──►</span>
+      <span class="arch-node">Service</span>
+      <span class="arch-arrow">──►</span>
+      <span class="arch-node">Pods</span>
+    </div>
+    <br>
+    <div class="arch-line">
+      <span class="arch-node">Prometheus</span>
+      <span class="arch-arrow">──► scrape ──►</span>
+      <span class="arch-node blue">Grafana</span>
+      <span class="arch-arrow">──► dashboards ──►</span>
+      <span class="arch-label">CPU · RAM · Pods · Nodes</span>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- FASES -->
 <section id="fases">
   <div class="reveal">
     <div class="section-label">// fases do projeto</div>
@@ -152,16 +777,92 @@ footer p{color:var(--muted);font-size:0.8rem;font-family:var(--mono)}
     <p class="section-desc">Cada fase entrega um componente real e funcional — sem atalhos, sem mocks.</p>
   </div>
   <div class="phases reveal">
-    <div class="phase"><div class="phase-num">01</div><div><div class="phase-title">Estrutura do repositório</div><div class="phase-desc">Organização modular com separação clara entre app, IaC, config management e CI/CD.</div><div class="phase-tags"><span class="tag">git</span><span class="tag">estrutura</span></div></div></div>
-    <div class="phase"><div class="phase-num">02</div><div><div class="phase-title">API REST Node.js</div><div class="phase-desc">API de gerenciamento de ambientes com endpoints CRUD e testes Jest + Supertest.</div><div class="phase-tags"><span class="tag">node.js</span><span class="tag">express</span><span class="tag">jest</span></div></div></div>
-    <div class="phase"><div class="phase-num">03</div><div><div class="phase-title">Docker + Docker Compose</div><div class="phase-desc">Containerização com imagem Alpine, npm ci, USER node — boas práticas de segurança.</div><div class="phase-tags"><span class="tag">docker</span><span class="tag">alpine</span><span class="tag">compose</span></div></div></div>
-    <div class="phase"><div class="phase-num">04</div><div><div class="phase-title">Terraform — VPC, EKS, RDS</div><div class="phase-desc">Módulos reutilizáveis para VPC com subnets públicas/privadas, EKS 1.31 e RDS PostgreSQL. State no S3 com lock DynamoDB.</div><div class="phase-tags"><span class="tag">terraform</span><span class="tag">aws</span><span class="tag">eks</span><span class="tag">rds</span></div></div></div>
-    <div class="phase"><div class="phase-num">05</div><div><div class="phase-title">Ansible — Bootstrap e Deploy</div><div class="phase-desc">Roles para instalar kubectl/Helm, configurar kubeconfig e fazer deploy da aplicação via playbook.</div><div class="phase-tags"><span class="tag">ansible</span><span class="tag">roles</span><span class="tag">idempotente</span></div></div></div>
-    <div class="phase"><div class="phase-num">06</div><div><div class="phase-title">Helm Charts + GitHub Actions</div><div class="phase-desc">Charts com Deployment, Service e Ingress. Pipeline CI/CD completo: test → build → push ECR → deploy EKS.</div><div class="phase-tags"><span class="tag">helm</span><span class="tag">github actions</span><span class="tag">ecr</span></div></div></div>
-    <div class="phase"><div class="phase-num">07</div><div><div class="phase-title">Observabilidade — Prometheus + Grafana</div><div class="phase-desc">kube-prometheus-stack com dashboards de CPU, memória e pods em tempo real para todos os namespaces.</div><div class="phase-tags"><span class="tag">prometheus</span><span class="tag">grafana</span><span class="tag">alertmanager</span></div></div></div>
+    <div class="phase">
+      <div class="phase-num">01</div>
+      <div>
+        <div class="phase-title">Estrutura do repositório</div>
+        <div class="phase-desc">Organização modular com separação clara entre app, IaC, config management e CI/CD.</div>
+        <div class="phase-tags">
+          <span class="tag">git</span><span class="tag">estrutura</span>
+        </div>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-num">02</div>
+      <div>
+        <div class="phase-title">API REST Node.js</div>
+        <div class="phase-desc">API de gerenciamento de ambientes com endpoints CRUD e testes Jest + Supertest.</div>
+        <div class="phase-tags">
+          <span class="tag">node.js</span><span class="tag">express</span><span class="tag">jest</span>
+        </div>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-num">03</div>
+      <div>
+        <div class="phase-title">Docker + Docker Compose</div>
+        <div class="phase-desc">Containerização com imagem Alpine, npm ci, USER node — boas práticas de segurança.</div>
+        <div class="phase-tags">
+          <span class="tag">docker</span><span class="tag">alpine</span><span class="tag">compose</span>
+        </div>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-num">04</div>
+      <div>
+        <div class="phase-title">Terraform — VPC, EKS, RDS</div>
+        <div class="phase-desc">Módulos reutilizáveis para VPC com subnets públicas/privadas, EKS 1.31 e RDS PostgreSQL. State no S3 com lock DynamoDB.</div>
+        <div class="phase-tags">
+          <span class="tag">terraform</span><span class="tag">aws</span><span class="tag">eks</span><span class="tag">rds</span>
+        </div>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-num">05</div>
+      <div>
+        <div class="phase-title">Ansible — Bootstrap e Deploy</div>
+        <div class="phase-desc">Roles para instalar kubectl/Helm, configurar kubeconfig e fazer deploy da aplicação via playbook.</div>
+        <div class="phase-tags">
+          <span class="tag">ansible</span><span class="tag">roles</span><span class="tag">idempotente</span>
+        </div>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-num">06</div>
+      <div>
+        <div class="phase-title">Helm Charts</div>
+        <div class="phase-desc">Charts com Deployment, Service e Ingress. Liveness/Readiness probes configurados. Values por ambiente.</div>
+        <div class="phase-tags">
+          <span class="tag">helm</span><span class="tag">kubernetes</span><span class="tag">ingress</span>
+        </div>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-num">07</div>
+      <div>
+        <div class="phase-title">GitHub Actions CI/CD</div>
+        <div class="phase-desc">Pipeline test → build → push ECR → helm deploy no EKS. Dois workflows separados: CI e Deploy.</div>
+        <div class="phase-tags">
+          <span class="tag">github actions</span><span class="tag">ecr</span><span class="tag">ci/cd</span>
+        </div>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-num">08</div>
+      <div>
+        <div class="phase-title">Observabilidade — Prometheus + Grafana</div>
+        <div class="phase-desc">kube-prometheus-stack com dashboards de CPU, memória e pods em tempo real para todos os namespaces.</div>
+        <div class="phase-tags">
+          <span class="tag">prometheus</span><span class="tag">grafana</span><span class="tag">alertmanager</span>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
+
 <hr class="divider">
+
+<!-- OBSERVABILIDADE -->
 <section id="observabilidade">
   <div class="reveal">
     <div class="section-label">// observabilidade</div>
@@ -169,18 +870,43 @@ footer p{color:var(--muted);font-size:0.8rem;font-family:var(--mono)}
     <p class="section-desc">Dados reais capturados durante execução do projeto no EKS.</p>
   </div>
   <div class="metrics-grid reveal">
-    <div class="metric-card"><div class="metric-val">2</div><div class="metric-label">Pods Running (infraweaver)</div></div>
-    <div class="metric-card"><div class="metric-val">0.08%</div><div class="metric-label">CPU usage por pod</div></div>
-    <div class="metric-card"><div class="metric-val">~13 MiB</div><div class="metric-label">RAM por pod</div></div>
-    <div class="metric-card"><div class="metric-val">25</div><div class="metric-label">Recursos Terraform criados</div></div>
-    <div class="metric-card"><div class="metric-val">33s</div><div class="metric-label">Duração do pipeline CI</div></div>
-    <div class="metric-card"><div class="metric-val">4/4</div><div class="metric-label">Testes Jest passando</div></div>
+    <div class="metric-card">
+      <div class="metric-val">2</div>
+      <div class="metric-label">Pods Running (infraweaver)</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-val">0.08%</div>
+      <div class="metric-label">CPU usage por pod</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-val">~13 MiB</div>
+      <div class="metric-label">RAM por pod</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-val">25</div>
+      <div class="metric-label">Recursos Terraform criados</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-val">33s</div>
+      <div class="metric-label">Duração do pipeline CI</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-val">4/4</div>
+      <div class="metric-label">Testes Jest passando</div>
+    </div>
   </div>
+
   <div class="reveal">
     <div class="section-label" style="margin-bottom:1rem">// custo estimado · us-west-2</div>
     <div class="cost-wrap">
       <table class="cost-table">
-        <thead><tr><th>Recurso</th><th>Instância</th><th>Custo/hora</th></tr></thead>
+        <thead>
+          <tr>
+            <th>Recurso</th>
+            <th>Instância</th>
+            <th>Custo/hora</th>
+          </tr>
+        </thead>
         <tbody>
           <tr><td>EKS Control Plane</td><td>—</td><td>$0.10</td></tr>
           <tr><td>Nodes (x2)</td><td>t3.medium</td><td>$0.083</td></tr>
@@ -192,7 +918,9 @@ footer p{color:var(--muted);font-size:0.8rem;font-family:var(--mono)}
     </div>
   </div>
 </section>
+
 <hr class="divider">
+
 <footer>
   <div class="footer-logo">infra//weaver</div>
   <p>por Sthefany Ribeiro</p>
@@ -201,9 +929,18 @@ footer p{color:var(--muted);font-size:0.8rem;font-family:var(--mono)}
     <a href="https://linkedin.com/in/sthefany-ribeiro" target="_blank">LinkedIn</a>
   </div>
 </footer>
+
 <script>
-const observer=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}})},{threshold:0.1});
-document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 </script>
 </body>
 </html>
