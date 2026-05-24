@@ -1,0 +1,28 @@
+replicaCount: 2
+
+image:
+  repository: 020901022128.dkr.ecr.us-west-2.amazonaws.com/infraweaver
+  tag: latest
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 3000
+
+ingress:
+  enabled: true
+  className: nginx
+  host: infraweaver.local
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 250m
+    memory: 256Mi
+
+env:
+  NODE_ENV: production
+  PORT: "3000"
